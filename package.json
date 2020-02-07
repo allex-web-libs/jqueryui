@@ -1,0 +1,25 @@
+{
+  "name": "allex_jqueryuiweblib",
+  "version": "1.0.0",
+  "description": "AllexJS Web lib with jqueryui",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/allex-web-libs/jqueryui.git"
+  },
+  "keywords": [
+    "ecosystem:AllexJS",
+    "jqueryui",
+    "web",
+    "lib"
+  ],
+  "author": "Andrija Petrovic <andrija.hers@gmail.com>",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/allex-web-libs/jqueryui/issues"
+  },
+  "homepage": "https://github.com/allex-web-libs/jqueryui#readme"
+}

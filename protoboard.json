@@ -1,0 +1,16 @@
+{
+  "browserify": {
+    "dist/browserified.js" : "index.js"
+  },
+  "additionaltargets": {
+    "js": [
+      ["dist", "jqueryuisrc", "jquery-ui.min.js"],
+      ["dist", "jquery.ui.touch-punch.min.js"]
+    ],
+    "css": [
+      ["dist", "jqueryuisrc", "jquery-ui.min.css"],
+      ["dist", "jqueryuisrc", "jquery-ui.structure.min.css"],
+      ["dist", "jqueryuisrc", "jquery-ui.theme.min.css"]
+    ]
+  }
+}
