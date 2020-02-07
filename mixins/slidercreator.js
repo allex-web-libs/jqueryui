@@ -12,6 +12,22 @@ function createSliderMixin (lib) {
   SliderMixin.prototype.initializeSlider = function () {
     this.$element.slider(lib.extend({}, this.getConfigVal('slider'), {slide: onSlid.bind(this), create: onCreated.bind(this)}));
   };
+  SliderMixin.prototype.initiateSliderValues = function (vals) {
+    var configvals = this.getConfigVal('slider').values,
+      configvalcount = lib.isArray(configvals) ? configvals.length : 1,
+      i,
+      val,
+      valsforset;
+    if (!lib.isArray(vals)) {
+      valsforset = defaultVals(this.$element.slider, configvalcount);
+    } else {
+      valsforset = [];
+      for(i=0; i<configvalcount; i++) {
+        valsforset.push(vals[i] || 0);
+      }
+    }
+    setValues.call(this, vals);
+  };
 
   //statics
   function onSlid (evnt, ui) {
@@ -52,6 +68,7 @@ function createSliderMixin (lib) {
   SliderMixin.addMethods = function (klass) {
     lib.inheritMethods(klass, SliderMixin
       ,'initializeSlider'
+      ,'initiateSliderValues'
     );
     klass.prototype.postInitializationMethodNames = 
       klass.prototype.postInitializationMethodNames.concat('initializeSlider');
