@@ -5,6 +5,7 @@ function createSliderMixin (lib) {
     this.slidervalues = null;
   }
   SliderMixin.prototype.destroy = function () {
+    this.slidervalues = null;
     if (this.$element) {
       this.$element.slider('destroy');
     }
@@ -12,21 +13,32 @@ function createSliderMixin (lib) {
   SliderMixin.prototype.initializeSlider = function () {
     this.$element.slider(lib.extend({}, this.getConfigVal('slider'), {slide: onSlid.bind(this), create: onCreated.bind(this)}));
   };
-  SliderMixin.prototype.initiateSliderValues = function (vals) {
+  SliderMixin.prototype.initializeSliderValues = function (vals) {
     var configvals = this.getConfigVal('slider').values,
       configvalcount = lib.isArray(configvals) ? configvals.length : 1,
       i,
       val,
       valsforset;
-    if (!lib.isArray(vals)) {
-      valsforset = defaultVals(this.$element.slider, configvalcount);
-    } else {
+    if (!lib.isVal(vals)) {
+      //valsforset = defaultVals(this.$element, configvalcount);
+      valsforset = this.defaultSliderValues(configvalcount);
+    } if (!lib.isArray(vals)) {
+      valsforset = [vals];
+    }else {
       valsforset = [];
       for(i=0; i<configvalcount; i++) {
         valsforset.push(vals[i] || 0);
       }
     }
-    setValues.call(this, vals);
+    setValues.call(this, valsforset);
+  };
+  SliderMixin.prototype.defaultSliderValues = function (count) {
+    if (count===1) {
+      return [this.$element.slider('option', 'min')];
+    }
+    if (count===2) {
+      return [this.$element.slider('option', 'min'), this.$element.slider('option', 'max')];
+    }
   };
 
   //statics
@@ -34,7 +46,7 @@ function createSliderMixin (lib) {
     if (!(evnt && evnt.type==='slide')) {
       return;
     }
-    setValues.call(this, ui.values);
+    setValues.call(this, ui.values || [ui.value]);
   }
 
   function onCreated (evnt, ui) {
@@ -45,8 +57,14 @@ function createSliderMixin (lib) {
     if (!this.$element) {
       return;
     }
-    if (this.getConfigVal('slider').annotate_handles) {
-      this.$element.find('.ui-slider-handle').each(handleTexter.bind(this, vals));
+    if (lib.isArray(vals)) {
+      this.$element.slider('option', 'values', vals);
+      if (this.getConfigVal('slider').annotate_handles) {
+        this.$element.find('.ui-slider-handle').each(handleTexter.bind(this, vals));
+      }
+    } else {
+      this.$element.slider('option', 'values', null);
+      this.$element.slider('option', 'value', null);
     }
     this.set('slidervalues', vals);
     vals = null;
@@ -64,11 +82,21 @@ function createSliderMixin (lib) {
   //endof statics
   
   //helpers
+  function defaultVals(elem, count) {
+    if (count===1) {
+      return [elem.slider('option', 'min')];
+    }
+    if (count===2) {
+      return [elem.slider('option', 'min'), elem.slider('option', 'max')];
+    }
+  }
+  //endof helpers
 
   SliderMixin.addMethods = function (klass) {
     lib.inheritMethods(klass, SliderMixin
       ,'initializeSlider'
-      ,'initiateSliderValues'
+      ,'initializeSliderValues'
+      ,'defaultSliderValues'
     );
     klass.prototype.postInitializationMethodNames = 
       klass.prototype.postInitializationMethodNames.concat('initializeSlider');
