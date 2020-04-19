@@ -55,7 +55,7 @@ function createSliderMixin (lib) {
     if (!lib.isVal(vals)) {
       //valsforset = defaultVals(this.$element, configvalcount);
       valsforset = this.defaultSliderValues(configvalcount);
-    } if (!lib.isArray(vals)) {
+    } else if (!lib.isArray(vals)) {
       valsforset = [vals];
     }else {
       valsforset = [];
